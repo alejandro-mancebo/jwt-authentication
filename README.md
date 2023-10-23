@@ -1,5 +1,5 @@
 # JWS Authentication
 
-- [server folder](https://github.com/alejandro-mancebo/jwt-authentication/tree/main/server/REAME.md)
-- [Client folder](https://github.com/alejandro-mancebo/jwt-authentication/tree/main/client/REAME.md)
+- [Server folder](https://github.com/alejandro-mancebo/jwt-authentication/blob/main/server/README.md)
+- [Client folder](https://github.com/alejandro-mancebo/jwt-authentication/blob/main/client/README.md)
 
