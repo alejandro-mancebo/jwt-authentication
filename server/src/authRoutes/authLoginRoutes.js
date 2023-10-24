@@ -45,7 +45,7 @@ router.post('/login', async (request, response) => {
   const user = await User.findOne({ email: request.body.email });
 
   if (user == null)
-    return response.status(400).send({ message: 'User not found' });
+    return response.status(401).send({ message: 'User not found' });
   try {
     if (await bcrypt.compare(request.body.password, user.password)) {
       const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
@@ -109,8 +109,10 @@ router.post('/signup', async (request, response) => {
   } catch (error) {
     // Abort transaction and send error message
     await session.abortTransaction();
+    // console.log(error)
     response.status(500).send({ message: error.message })
   } finally {
+    // End mongoose session
     session.endSession();
   }
 });

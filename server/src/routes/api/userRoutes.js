@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { AuthenticateToken } from '../middleware/authenticateToken.js';
+import { AuthenticateToken } from '../../middleware/authenticateToken.js';
 
-import { users } from '../data/users.data.js';
+import { users } from '../../data/users.data.js';
 
 const usersRouter = Router();
 

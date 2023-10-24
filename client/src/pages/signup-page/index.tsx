@@ -79,7 +79,8 @@ export default function SignUpPage() {
 
   const onSubmitHandle = async (data: IUser) => {
     let newData: User;
-    const url = `${import.meta.env.VITE_BASE_URL}/auth/signup`;
+    const url = `${import.meta.env.VITE_AUTH_URL}/register`;
+    // const url = `${import.meta.env.VITE_BASE_URL}/auth/signup`;
 
     if (data !== undefined) {
       newData = {

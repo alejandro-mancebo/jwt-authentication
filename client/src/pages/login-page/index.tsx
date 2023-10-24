@@ -39,7 +39,7 @@ export default function LoginPage() {
   const { errors } = formState;
 
   const onSubmitHandle = async (data: User) => {
-    const url = `${import.meta.env.VITE_BASE_URL}/auth/login`;
+    const url = `${import.meta.env.VITE_AUTH_URL}/auth`;
 
     if (data !== undefined) {
       const response = await fetch(url, {
