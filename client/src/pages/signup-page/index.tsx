@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useForm, useController } from "react-hook-form";
-import Select from "react-select";
+import { axiosAuth } from "../../api/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useForm, useController } from "react-hook-form";
+import Select from "react-select";
 import Swal from "sweetalert2";
 
 import { User } from "../../types/user.type";
+
+
+const USER_REGEX = /^[a-zA-Z][a-zA-z0-9-_]{3,23}$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]){8,24}/;
 
 interface IUser extends User {
   confirmPassword: string;
@@ -78,12 +82,13 @@ export default function SignUpPage() {
   };
 
   const onSubmitHandle = async (data: IUser) => {
-    let newData: User;
-    const url = `${import.meta.env.VITE_AUTH_URL}/register`;
+    let newUser: User;
+    const url = `${import.meta.env.VITE_AUTH_URL}/signup`;
     // const url = `${import.meta.env.VITE_BASE_URL}/auth/signup`;
 
+    // console.log(data)
     if (data !== undefined) {
-      newData = {
+      newUser = {
         name: data.name,
         email: data.email,
         password: data.password,
@@ -91,53 +96,75 @@ export default function SignUpPage() {
         role: data.role,
       };
 
-      if (data.role !== "admin") {
-        newData.family_code = data.family_code;
-      }
+      // if (data.role !== "admin") {
+      //   newUser.family_code = data.family_code;
+      // }
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newData),
-      });
+      //Use fetch
+      // const response = await fetch(url, {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(newUser),
+      // });
+
+      // if (response.status === 201) {
+      //   const data = await response.json();
+      //   console.log(data);
+      //   Swal.fire({
+      //     icon: "success",
+      //     title: "Success...",
+      //     text: "You are register successfully!",
+      //   });
+      //   navigate("/login");
+      // } else {
+      //   Swal.fire({
+      //     icon: "error",
+      //     title: "fail...",
+      //     text: "Failed to register!",
+      //   });
+      // }
 
 
-      // axios.post(url, data, {
-      //   headers: {
-      //     Accept: "application/json",
-      //     "Content-Type": "application/json;charset=UTF-8",
-      //   },
-      // })
-      //   .then(({ data }) => { console.log(data); })
-      //   .catch();
+      // Use axios
+      await axiosAuth.post('/signup',
+        JSON.stringify({ newUser }), {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
+        },
+        withCredentials: true
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 201) {
+            Swal.fire({
+              icon: "success",
+              title: "Success...",
+              text: "You are register successfully!",
+            });
+            navigate("/login");
+          }
 
-
-
-
-
-
-
-      if (response.status === 201) {
-        const data = await response.json();
-        console.log(data);
-        Swal.fire({
-          icon: "success",
-          title: "Success...",
-          text: "You are register successfully!",
-        });
-        navigate("/login");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "fail...",
-          text: "Failed to register!",
-        });
-      }
+        })
+        .catch((error) => {
+          if (!error?.response) {
+            console.log('No server response');
+          } else if (error?.response.status === 409) {
+            console.log('User exist');
+          } else {
+            console.log('Registration failed');
+          }
+          Swal.fire({
+            icon: "error",
+            title: "fail...",
+            text: "Failed to register!",
+          });
+        })
     }
   };
 
   return (
-    <>
+    <section>
       <div className=" max-w-md mx-auto p-2 overflow-hidden bg-hs-lightsteelblue md:max-w-5xl md:mx-auto  md:m-4 md:p-10 md:max-h-screen lg:max-w-6xl lg:mx-auto xl:max-w-7xl xl:mx-auto ">
         <div className={` md:flex justify-between `}>
           <div
@@ -158,6 +185,7 @@ export default function SignUpPage() {
                     className={` rounded-md w-full px-4 py-2 mt-3 text-lg`}
                     type="text"
                     id="name"
+                    autoComplete="off"
                     {...register("name")}
                   />
                   {errors.name?.message && (
@@ -172,6 +200,7 @@ export default function SignUpPage() {
                     className={` rounded-md w-full px-4 py-2 mt-3 text-lg`}
                     type="email"
                     id="email"
+                    autoComplete="off"
                     {...register("email")}
                   />
                   {errors.email?.message && (
@@ -213,6 +242,7 @@ export default function SignUpPage() {
                     id="role"
                   />
                 </div>
+
                 <div className={`mt-4`}>
                   <div className={`flex items-end justify-between `}>
                     <div className={` `}>
@@ -232,11 +262,7 @@ export default function SignUpPage() {
                         <p className="errors">{errors.dayOfBirth?.message}</p>
                       )}
                     </div>
-                    <div className={`mx-2 `}>
-                      {errors.family_code?.message && (
-                        <p className="errors">{errors.family_code?.message}</p>
-                      )}
-                    </div>
+
                   </div>
                 </div>
               </div>
@@ -245,6 +271,7 @@ export default function SignUpPage() {
                 <button
                   className="bg-hs-darkslategray text-hs-gainsboro text-lg  font-semibold w-3/4 mx-auto rounded-lg p-3 "
                   type="submit"
+
                 >
                   Sign Up
                 </button>
@@ -253,6 +280,6 @@ export default function SignUpPage() {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }

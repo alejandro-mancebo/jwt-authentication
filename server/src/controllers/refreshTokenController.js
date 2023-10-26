@@ -1,27 +1,21 @@
-import { Router } from 'express';
 import jwt from 'jsonwebtoken';
-import { validationResult } from 'express-validator';
-import mongoose from 'mongoose';
 import User from '../models/user.model.js';
 
 
-const router = Router();
-
-//Note: Change this var to a database
-// let refreshTokens = [];
-
-const handleRefreshToken = (request, response) => {
+const handleRefreshToken = async (request, response) => {
 
   const cookies = request.cookies;
   if (!cookies?.jwt) return response.sendStatus(401);
-  console.log(cookies.jwt);
+
+  console.log("cookies.jwt", cookies.jwt);
   const refreshToken = cookies.jwt;
 
-  // Find the user
-  const foundUser = User.findOne({ email: email });
+  // Find the user using refresh token
+  const foundUser = await User.findOne({ refreshToken }).exec();
+
 
   // Check if there are any user. If there aren't return
-  if (!user)
+  if (!foundUser)
     return response.sendStatus(403);
 
   jwt.verify(
@@ -30,14 +24,13 @@ const handleRefreshToken = (request, response) => {
     (error, decoded) => {
       if (error || foundUser.email !== decoded.email)
         return response.sendStatus(403);
+
       const accessToken = jwt.sign(
-        { email: decoded.email },
+        { "UserInfo": { "email": decoded.email, "role": decoded.role } },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '60s' }
       );
-
-      response.json({ accessToken });
-
+      response.json({ accessToken: accessToken });
     }
   );
 }

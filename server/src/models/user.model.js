@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
     },
-    dayOfbirth: {
+    dayOfBirth: {
       type: Date,
       required: [false, "Day of Birth is required"],
     },
@@ -23,7 +23,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["admin", "user"],
       required: [true, "Role is required"],
-    }
+    },
+    refreshToken: String,
   },
   { timestamps: true }
 );

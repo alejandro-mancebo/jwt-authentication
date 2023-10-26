@@ -1,15 +1,8 @@
-import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { validationResult } from 'express-validator';
-import mongoose from 'mongoose';
 import User from '../models/user.model.js';
 
-
-const router = Router();
-
-//Note: Change this var to a database
-let refreshTokens = [];
 
 const handleLogin = async (request, response) => {
 
@@ -18,29 +11,36 @@ const handleLogin = async (request, response) => {
   if (!error.isEmpty())
     response.status(400).json({ 'message': 'Email and password are required!!!' });
 
+  console.log(request.body.user);
+  const { email, password } = request.body.user;
 
-  const { email, password } = request.body;
+  // Find and check if there are any user. If there aren't return
+  const foundUser = await User.findOne({ email: email }).exec();
+  if (!foundUser) return response.sendStatus(401); // Unauthorized
 
-  // Find the user
-  const user = await User.findOne({ email: email });
-
-  // Check if there are any user. If there aren't return
-  if (user == null)
-    return response.status(401).json({ message: 'User not found' });
+  //  if (user == null)
+  // return response.status(401).json({ message: 'User not found' });
 
   try {
     // Evaluate password
-    if (await bcrypt.compare(password, user.password)) {
+    if (await bcrypt.compare(password, foundUser.password)) {
       // Create JWT token
-      const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+      const accessToken = jwt.sign({ "UserInfo": { email: foundUser.email, role: foundUser.role } },
+        process.env.ACCESS_TOKEN_SECRET, { expiresIn: '60s' });
 
       // Create JWT refresh token
-      const refreshToken = jwt.sign({ email: user.email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
-      refreshTokens.push(refreshToken);
+      const refreshToken = jwt.sign({ email: foundUser.email },
+        process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
 
-      response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+      // Save refreshToken to the user in the database
+      foundUser.refreshToken = refreshToken;
+      await foundUser.save();
 
-      response.status(201).json({ accessToken: accessToken });
+      // Note: secure: true at production
+      response.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+
+      // Send the user found and the accessTokend
+      response.status(201).json({ user: foundUser, accessToken: accessToken });
 
       // response.json({ accessToken: accessToken, refreshToken });
 

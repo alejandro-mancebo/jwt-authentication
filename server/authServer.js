@@ -1,26 +1,44 @@
 import express from 'express';
+import 'dotenv/config';
 import bodyParser from 'body-parser';
 import cors from "cors";
+import cookieParser from 'cookie-parser';
 import { connectMongoDB } from './src/config/mongoose.js';
-import 'dotenv/config';
+
 
 // import authRoutes from './src/authRoutes/authLoginRoutes.js';
 import registerRoutes from './src/routes/registerRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
-import refreshTokenRouter from './src/routes/refreshTokenRoutes.js';
+import refreshTokenRoutes from './src/routes/refreshTokenRoutes.js';
+import logoutRoutes from './src/routes/logoutRoutes.js';
 
 const PORT = process.env.AUTH_SERVER_PORT || 5500;
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors(
+  {
+    origin: [
+      'http://localhost:5000',
+      'http://localhost:5500',
+      'http://localhost:5173',
+    ],
+    credentials: true
+  }
+));
 
+// built-in middleware for json
 app.use(express.json());
 
+// middleware for cookies
+app.use(cookieParser());
+
+
 // app.use('/auth', authRoutes);
-app.use('/register', registerRoutes);
+app.use('/signup', registerRoutes);
 app.use('/auth', authRoutes);
-app.use('/refresh', refreshTokenRouter);
+app.use('/refresh', refreshTokenRoutes);
+app.use('/logout', logoutRoutes);
 
 
 // catch error from the previous middlewares

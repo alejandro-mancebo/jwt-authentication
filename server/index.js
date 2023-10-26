@@ -32,6 +32,7 @@ app.use(AuthenticateToken);
 
 // Api
 app.use('/users', routes);
+app.use('/user-profile', routes);
 
 
 // catch error from the previous middlewares

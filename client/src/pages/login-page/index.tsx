@@ -1,9 +1,13 @@
-
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useContext } from "react";
+import useAuth from "../../hooks/useAuth";
+import { axiosAuth } from "../../api/axios";
+
+
+
+
 // import { AppContext } from "../../hooks/index";
 
 type User = {
@@ -21,9 +25,14 @@ const UserFormData = z.object({
 
 
 export default function LoginPage() {
+  const { setAuth }: any = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
+
   // const [user, setUser] = useState<User>()
 
-  const navigate = useNavigate();
   // const authContext = useContext(AppContext);
   // console.log(authContext.loggedInUser);
 
@@ -38,50 +47,81 @@ export default function LoginPage() {
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
 
-  const onSubmitHandle = async (data: User) => {
-    const url = `${import.meta.env.VITE_AUTH_URL}/auth`;
+  const onSubmitHandle = async (user: User) => {
 
-    if (data !== undefined) {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      console.log(response.status);
-      console.log(response);
+    if (user !== undefined) {
 
-      try {
+  // const response = await fetch(url, {
+  //   method: "POST",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify(data),
+  // });
+  // console.log(response.status);
+  // console.log(response);
 
+  // try {
+  //   if (response.status === 201) {
+  //     const data = await response.json();
+  //     const token = data.token; // Assuming the token is in the response as 'token'
 
+      //     console.log('data:', data);
 
-        if (response.status === 201) {
-          const data = await response.json();
-          const token = data.token; // Assuming the token is in the response as 'token'
+      //     // Now you have the token, and you can use it for further authentication or API requests
+      //     console.log("Token: ", token, "User: ", data.username);
+      //     // authContext.setLoggedInUser(data.username);
+      //     // authContext.login(token);
+      //     // navigate to home page
+      //     navigate("/user-profile", {
+      //       replace: true,
+      //     });
+      //   } else {
+      //     // Handle other response statuses (e.g., display an error message)
+      //     console.log("Error:", response.status);
+      //   }
 
-          // Now you have the token, and you can use it for further authentication or API requests
-          console.log("Token: ", token, "User: ", data.username);
-          // authContext.setLoggedInUser(data.username);
-          // authContext.login(token);
-          // navigate to home page
-          navigate("/user-profile", {
-            replace: true,
-          });
-        } else {
-          // Handle other response statuses (e.g., display an error message)
-          console.log("Error:", response.status);
-        }
+      //   form.reset();
+      // } catch (error) {
+      //   // Handle network errors or other exceptions
+      //   console.error("Error:", error);
+      // }
 
-        form.reset();
-      } catch (error) {
-        // Handle network errors or other exceptions
-        console.error("Error:", error);
-      }
+      // Use axios
+      await axiosAuth.post('/auth',
+        JSON.stringify({ user }), {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
+        },
+        withCredentials: true
+      })
+        .then((response) => {
 
+          if (response.status === 201) {
+            const accessToken = response.data.accessToken;
+            const { password, role } = response.data.user;
+            const user = response.data.user;
+            console.log('accessToken:', accessToken)
+            setAuth({ user, password, role, accessToken });
+            //  navigate to home page
+            navigate(from, { replace: true });
+          }
+        })
+        .catch((errors) => {
+          if (!errors?.response) {
+            console.log('No server response');
+          } else if (errors?.response.status === 400) {
+            console.log('Missing username or password');
+          } else if (errors?.response.status === 401) {
+            console.log('Unauthorized');
+          } else {
+            console.log('Login failed');
+          }
+        });
     }
   };
 
   return (
-    <>
+    <section>
       <div
         className=" max-w-md mx-auto p-2 overflow-hidden bg-hs-lightsteelblue md:max-w-5xl md:mx-auto md:rounded-xl md:m-4 md:p-10 md:max-h-screen lg:max-w-6xl lg:mx-auto xl:max-w-7xl xl:mx-auto ">
         <div className=" md:flex justify-between items-center ">
@@ -96,7 +136,7 @@ export default function LoginPage() {
             </div>
             <form onSubmit={handleSubmit(onSubmitHandle)}>
               <div className={` my-0`}>
-                <label className={`mb-6 `} htmlFor="username">
+                <label className={`mb-6 `} htmlFor="email">
                   email
                 </label>
                 <input
@@ -132,7 +172,7 @@ export default function LoginPage() {
                 </p> */}
               </div>
               <div className={` mt-16 mb-4 text-center`}>
-                <button
+                <button type="submit"
                   className={`bg-hs-darkslategray text-hs-gainsboro text-lg  font-semibold w-3/4 mx-auto rounded-lg p-3`}
                 >
                   Sign In
@@ -153,7 +193,7 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }
 

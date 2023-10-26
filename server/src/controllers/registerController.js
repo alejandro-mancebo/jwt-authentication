@@ -1,5 +1,4 @@
 import { validationResult } from 'express-validator';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import User from '../models/user.model.js';
@@ -7,13 +6,19 @@ import User from '../models/user.model.js';
 
 const handleSignUp = async (request, response) => {
 
+  console.log('request: ', request.body.newUser)
   // Validate request data
   const error = validationResult(request);
   if (!error.isEmpty())
     response.status(400).json({ 'message': 'The information supplied is Incorrect' });
 
   // Get the user data from the body of the request 
-  const { name, email, password, dayOfBirth, role } = request.body;
+  const { name, email, password, dayOfBirth, role } = request.body.newUser;
+
+  // Check for duplicate user email in the database
+  const duplicateUser = await User.findOne({ email: email }).exec();
+  if (duplicateUser)
+    return response.sendStatus(409); //Conflict
 
   // Start mongoose session to the transaction
   const session = await mongoose.startSession();
