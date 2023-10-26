@@ -13,7 +13,6 @@ const handleRefreshToken = async (request, response) => {
   // Find the user using refresh token
   const foundUser = await User.findOne({ refreshToken }).exec();
 
-
   // Check if there are any user. If there aren't return
   if (!foundUser)
     return response.sendStatus(403);

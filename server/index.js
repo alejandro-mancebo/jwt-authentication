@@ -1,11 +1,11 @@
 import express from 'express';
+import 'dotenv/config';
 import bodyParser from 'body-parser';
 import cors from "cors";
 import { connectMongoDB } from './src/config/mongoose.js';
-import 'dotenv/config';
 
 import routes from './src/routes/api/users.js';
-import usersRoutes from './src/routes/api/userRoutes.js';
+// import usersRoutes from './src/routes/api/userRoutes.js';
 import cookieParser from 'cookie-parser';
 import { AuthenticateToken } from './src/middleware/authenticateToken.js';
 
@@ -23,10 +23,6 @@ app.use(express.json());
 // middleware for cookies
 app.use(cookieParser());
 
-//Note: Fix the index router
-// app.use('/api', routes);
-// app.use('/api', usersRoutes);
-
 // Verify Authorize token for the following APIs
 app.use(AuthenticateToken);
 
@@ -34,11 +30,12 @@ app.use(AuthenticateToken);
 app.use('/users', routes);
 app.use('/user-profile', routes);
 
-
 // catch error from the previous middlewares
 app.use((error, request, response, next) => {
+
   // skip if error has sent in response already
   if (response.headersSent) { return next(error); }
+
   // response catched error
   response
     .status(error.code || 500)

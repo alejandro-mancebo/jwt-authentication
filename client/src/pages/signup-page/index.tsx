@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosAuth } from "../../api/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -50,7 +50,7 @@ const UserFormData = z
 
 
 export default function SignUpPage() {
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [, setIsDisabled] = useState(false);
 
   const navigate = useNavigate();
 
@@ -83,10 +83,7 @@ export default function SignUpPage() {
 
   const onSubmitHandle = async (data: IUser) => {
     let newUser: User;
-    const url = `${import.meta.env.VITE_AUTH_URL}/signup`;
-    // const url = `${import.meta.env.VITE_BASE_URL}/auth/signup`;
 
-    // console.log(data)
     if (data !== undefined) {
       newUser = {
         name: data.name,
@@ -95,35 +92,6 @@ export default function SignUpPage() {
         dayOfBirth: data.dayOfBirth,
         role: data.role,
       };
-
-      // if (data.role !== "admin") {
-      //   newUser.family_code = data.family_code;
-      // }
-
-      //Use fetch
-      // const response = await fetch(url, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(newUser),
-      // });
-
-      // if (response.status === 201) {
-      //   const data = await response.json();
-      //   console.log(data);
-      //   Swal.fire({
-      //     icon: "success",
-      //     title: "Success...",
-      //     text: "You are register successfully!",
-      //   });
-      //   navigate("/login");
-      // } else {
-      //   Swal.fire({
-      //     icon: "error",
-      //     title: "fail...",
-      //     text: "Failed to register!",
-      //   });
-      // }
-
 
       // Use axios
       await axiosAuth.post('/signup',
@@ -163,16 +131,14 @@ export default function SignUpPage() {
     }
   };
 
+
   return (
     <section>
       <div className=" max-w-md mx-auto p-2 overflow-hidden bg-hs-lightsteelblue md:max-w-5xl md:mx-auto  md:m-4 md:p-10 md:max-h-screen lg:max-w-6xl lg:mx-auto xl:max-w-7xl xl:mx-auto ">
         <div className={` md:flex justify-between `}>
-          <div
-            className={` border-solid rounded-xl md:w-5/12  md:ml-10 md:px-2 `}
-          >
+          <div className={` border-solid rounded-xl md:w-5/12  md:ml-10 md:px-2 `} >
             <div className={`w-[250px] mt-3 mb-3 mx-auto`}>
               <h1 className={` font-bold text-2xl text-center`}>Sign Up</h1>
-
             </div>
 
             <form onSubmit={handleSubmit(onSubmitHandle)}>
@@ -207,7 +173,7 @@ export default function SignUpPage() {
                     <p className="errors">{errors.email?.message}</p>
                   )}
                 </div>
-                <div className={`  mt-4 `}>
+                <div className={` mt-4 `}>
                   <label htmlFor="password">Password</label>
                   <input
                     className={` rounded-md w-full px-4 py-2 mt-3 text-lg`}
@@ -262,8 +228,8 @@ export default function SignUpPage() {
                         <p className="errors">{errors.dayOfBirth?.message}</p>
                       )}
                     </div>
-
                   </div>
+
                 </div>
               </div>
 
@@ -271,12 +237,12 @@ export default function SignUpPage() {
                 <button
                   className="bg-hs-darkslategray text-hs-gainsboro text-lg  font-semibold w-3/4 mx-auto rounded-lg p-3 "
                   type="submit"
-
                 >
                   Sign Up
                 </button>
               </div>
             </form>
+
           </div>
         </div>
       </div>

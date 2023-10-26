@@ -18,8 +18,6 @@ const handleLogin = async (request, response) => {
   const foundUser = await User.findOne({ email: email }).exec();
   if (!foundUser) return response.sendStatus(401); // Unauthorized
 
-  //  if (user == null)
-  // return response.status(401).json({ message: 'User not found' });
 
   try {
     // Evaluate password
@@ -41,8 +39,6 @@ const handleLogin = async (request, response) => {
 
       // Send the user found and the accessTokend
       response.status(201).json({ user: foundUser, accessToken: accessToken });
-
-      // response.json({ accessToken: accessToken, refreshToken });
 
     } else {
       response.status(401).send({ message: 'Not Allowed' });

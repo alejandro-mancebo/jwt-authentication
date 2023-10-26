@@ -6,10 +6,6 @@ import useAuth from "../../hooks/useAuth";
 import { axiosAuth } from "../../api/axios";
 
 
-
-
-// import { AppContext } from "../../hooks/index";
-
 type User = {
   email: string;
   password: string;
@@ -31,11 +27,6 @@ export default function LoginPage() {
   const from = location.state?.from?.pathname || '/';
 
 
-  // const [user, setUser] = useState<User>()
-
-  // const authContext = useContext(AppContext);
-  // console.log(authContext.loggedInUser);
-
   const form = useForm<User>({
     defaultValues: {
       email: "",
@@ -50,41 +41,6 @@ export default function LoginPage() {
   const onSubmitHandle = async (user: User) => {
 
     if (user !== undefined) {
-
-  // const response = await fetch(url, {
-  //   method: "POST",
-  //   headers: { "Content-Type": "application/json" },
-  //   body: JSON.stringify(data),
-  // });
-  // console.log(response.status);
-  // console.log(response);
-
-  // try {
-  //   if (response.status === 201) {
-  //     const data = await response.json();
-  //     const token = data.token; // Assuming the token is in the response as 'token'
-
-      //     console.log('data:', data);
-
-      //     // Now you have the token, and you can use it for further authentication or API requests
-      //     console.log("Token: ", token, "User: ", data.username);
-      //     // authContext.setLoggedInUser(data.username);
-      //     // authContext.login(token);
-      //     // navigate to home page
-      //     navigate("/user-profile", {
-      //       replace: true,
-      //     });
-      //   } else {
-      //     // Handle other response statuses (e.g., display an error message)
-      //     console.log("Error:", response.status);
-      //   }
-
-      //   form.reset();
-      // } catch (error) {
-      //   // Handle network errors or other exceptions
-      //   console.error("Error:", error);
-      // }
-
       // Use axios
       await axiosAuth.post('/auth',
         JSON.stringify({ user }), {
@@ -95,14 +51,12 @@ export default function LoginPage() {
         withCredentials: true
       })
         .then((response) => {
-
           if (response.status === 201) {
             const accessToken = response.data.accessToken;
             const { password, role } = response.data.user;
             const user = response.data.user;
             console.log('accessToken:', accessToken)
             setAuth({ user, password, role, accessToken });
-            //  navigate to home page
             navigate(from, { replace: true });
           }
         })
@@ -125,15 +79,13 @@ export default function LoginPage() {
       <div
         className=" max-w-md mx-auto p-2 overflow-hidden bg-hs-lightsteelblue md:max-w-5xl md:mx-auto md:rounded-xl md:m-4 md:p-10 md:max-h-screen lg:max-w-6xl lg:mx-auto xl:max-w-7xl xl:mx-auto ">
         <div className=" md:flex justify-between items-center ">
-          <div
-            className={` border-solid rounded-xl md:w-5/12 md:ml-10 md:px-10 `}
-          >
+          <div className={` border-solid rounded-xl md:w-5/12 md:ml-10 md:px-10 `} >
             <div className={`w-[250px] mt-3 mb-16 mx-auto`}>
               <h1 className={` font-bold text-2xl text-center`}>
                 Login
               </h1>
-
             </div>
+
             <form onSubmit={handleSubmit(onSubmitHandle)}>
               <div className={` my-0`}>
                 <label className={`mb-6 `} htmlFor="email">
@@ -160,19 +112,9 @@ export default function LoginPage() {
                 {errors.password?.message && (
                   <p className="errors">{errors.password?.message}</p>
                 )}
-                {/* Todo */}
-                {/* <p className={` text-end mt-2 p-3 text-sm`}>
-                  {" "}
-                  <Link
-                    className=" hover:text-hs-darkslategray hover:font-semibold transition ease-in-out duration-300 "
-                    to="#"
-                  >
-                    Forgot your password
-                  </Link>
-                </p> */}
               </div>
               <div className={` mt-16 mb-4 text-center`}>
-                <button type="submit"
+                <button type="button"
                   className={`bg-hs-darkslategray text-hs-gainsboro text-lg  font-semibold w-3/4 mx-auto rounded-lg p-3`}
                 >
                   Sign In
@@ -190,6 +132,7 @@ export default function LoginPage() {
                 </p>
               </div>
             </form>
+
           </div>
         </div>
       </div>

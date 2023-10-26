@@ -4,16 +4,9 @@ import bcrypt from 'bcrypt';
 import { validationResult } from 'express-validator';
 import mongoose from 'mongoose';
 import User from '../models/user.model.js';
-
 import { GenerateAccessToken } from './generateAccessToken.js';
 
-// import { users } from '../data/users.data.js';
-
 const router = Router();
-
-//Note: Change this var to a database
-let refreshTokens = [];
-
 
 router.delete('/logout', (request, response) => {
   refreshTokens = refreshTokens.filter(token => token !== request.body.token);
@@ -48,15 +41,11 @@ router.post('/login', async (request, response) => {
     return response.status(401).send({ message: 'User not found' });
   try {
     if (await bcrypt.compare(request.body.password, user.password)) {
-      const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+      const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' });
       const refreshToken = jwt.sign({ email: user.email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
-      refreshTokens.push(refreshToken);
 
       response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
       response.status(201).json({ accessToken: accessToken });
-
-      // response.json({ accessToken: accessToken, refreshToken });
-
     } else {
       response.status(401).send({ message: 'Not Allowed' });
     }

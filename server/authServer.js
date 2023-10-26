@@ -33,7 +33,6 @@ app.use(express.json());
 // middleware for cookies
 app.use(cookieParser());
 
-
 // app.use('/auth', authRoutes);
 app.use('/signup', registerRoutes);
 app.use('/auth', authRoutes);
@@ -43,8 +42,10 @@ app.use('/logout', logoutRoutes);
 
 // catch error from the previous middlewares
 app.use((error, request, response, next) => {
+
   // skip if error has sent in response already
   if (response.headersSent) { return next(error); }
+
   // response catched error
   response
     .status(error.code || 500)

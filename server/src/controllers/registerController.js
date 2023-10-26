@@ -6,7 +6,6 @@ import User from '../models/user.model.js';
 
 const handleSignUp = async (request, response) => {
 
-  console.log('request: ', request.body.newUser)
   // Validate request data
   const error = validationResult(request);
   if (!error.isEmpty())
@@ -51,7 +50,6 @@ const handleSignUp = async (request, response) => {
     // Abort transaction and send error message
     await session.abortTransaction();
 
-    // console.log(error)
     response.status(500).json({ 'message': error.message })
 
   } finally {
@@ -59,8 +57,6 @@ const handleSignUp = async (request, response) => {
     // End the mongoose session
     session.endSession();
   }
-
-
 }
 
 export default { handleSignUp };
