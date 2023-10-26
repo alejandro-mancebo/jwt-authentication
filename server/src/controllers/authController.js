@@ -11,7 +11,6 @@ const handleLogin = async (request, response) => {
   if (!error.isEmpty())
     response.status(400).json({ 'message': 'Email and password are required!!!' });
 
-  console.log(request.body.user);
   const { email, password } = request.body.user;
 
   // Find and check if there are any user. If there aren't return
@@ -44,7 +43,7 @@ const handleLogin = async (request, response) => {
       response.status(401).send({ message: 'Not Allowed' });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error.message)
     response.status(500).send({ error: error.message })
   }
 }

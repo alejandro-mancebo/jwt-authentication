@@ -93,14 +93,15 @@ router.post('/signup', async (request, response) => {
     // Set and send status to the client
     response.status(201).json({ user: createNewUser.toObject({ getters: true }) });
 
-    // response.status(201).send(users);
-
   } catch (error) {
+
     // Abort transaction and send error message
+    console.log(error.message)
     await session.abortTransaction();
-    // console.log(error)
     response.status(500).send({ message: error.message })
+
   } finally {
+
     // End mongoose session
     session.endSession();
   }

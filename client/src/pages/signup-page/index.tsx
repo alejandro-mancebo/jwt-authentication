@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosAuth } from "../../api/axios";
+import { axiosPrivate } from "../../api/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm, useController } from "react-hook-form";
@@ -94,7 +94,7 @@ export default function SignUpPage() {
       };
 
       // Use axios
-      await axiosAuth.post('/signup',
+      await axiosPrivate.post('/signup',
         JSON.stringify({ newUser }), {
         headers: {
           "Accept": "application/json",
@@ -103,7 +103,6 @@ export default function SignUpPage() {
         withCredentials: true
       })
         .then((response) => {
-          console.log(response);
           if (response.status === 201) {
             Swal.fire({
               icon: "success",
@@ -112,7 +111,6 @@ export default function SignUpPage() {
             });
             navigate("/login");
           }
-
         })
         .catch((error) => {
           if (!error?.response) {

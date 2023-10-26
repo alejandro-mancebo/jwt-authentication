@@ -7,7 +7,6 @@ const handleRefreshToken = async (request, response) => {
   const cookies = request.cookies;
   if (!cookies?.jwt) return response.sendStatus(401);
 
-  console.log("cookies.jwt", cookies.jwt);
   const refreshToken = cookies.jwt;
 
   // Find the user using refresh token

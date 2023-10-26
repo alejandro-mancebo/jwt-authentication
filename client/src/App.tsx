@@ -5,6 +5,7 @@ import HomePage from './pages/home-page';
 import SignUpPage from './pages/signup-page';
 import LoginPage from './pages/login-page';
 import UserProfilePage from './pages/user-profile-page';
+import UsersPage from './pages/users-page';
 
 import './App.css';
 
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
       <Route element={<RequireAuth />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/user-profile" element={<UserProfilePage />} />
+        <Route path="/users" element={<UsersPage />} />
       </Route>
 
       {/* not found */}

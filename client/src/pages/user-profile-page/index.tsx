@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import { axiosAuth } from "../../api/axios";
+import { axiosPrivate } from "../../api/axios";
+import UsersPage from "../users-page";
 
 export default function index() {
   const { setAuth }: any = useAuth();
@@ -9,7 +10,7 @@ export default function index() {
   const handleLogout = async () => {
 
     // Use axios
-    await axiosAuth.post('/logout', {
+    await axiosPrivate.post('/logout', {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json;charset=UTF-8",
@@ -36,6 +37,7 @@ export default function index() {
   return (
     <section>
       <h1>User Profile Page</h1>
+      <UsersPage />
       <div ><Link to="/">Go to Home page</Link></div>
       <button type="button" onClick={handleLogout}>logout</button>
     </section>

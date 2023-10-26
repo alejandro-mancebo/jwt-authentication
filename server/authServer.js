@@ -16,16 +16,16 @@ const PORT = process.env.AUTH_SERVER_PORT || 5500;
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors(
-  {
-    origin: [
-      'http://localhost:5000',
-      'http://localhost:5500',
-      'http://localhost:5173',
-    ],
-    credentials: true
-  }
-));
+
+// Cors Origin Resourse Sharing
+app.use(cors({
+  origin: [
+    'http://localhost:5000',
+    'http://localhost:5500',
+    'http://localhost:5173',
+  ],
+  credentials: true
+}));
 
 // built-in middleware for json
 app.use(express.json());
@@ -38,7 +38,6 @@ app.use('/signup', registerRoutes);
 app.use('/auth', authRoutes);
 app.use('/refresh', refreshTokenRoutes);
 app.use('/logout', logoutRoutes);
-
 
 // catch error from the previous middlewares
 app.use((error, request, response, next) => {

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import useAuth from "../../hooks/useAuth";
-import { axiosAuth } from "../../api/axios";
+import { axiosPrivate } from "../../api/axios";
 
 
 type User = {
@@ -42,7 +42,7 @@ export default function LoginPage() {
 
     if (user !== undefined) {
       // Use axios
-      await axiosAuth.post('/auth',
+      await axiosPrivate.post('/auth',
         JSON.stringify({ user }), {
         headers: {
           "Accept": "application/json",
@@ -114,7 +114,7 @@ export default function LoginPage() {
                 )}
               </div>
               <div className={` mt-16 mb-4 text-center`}>
-                <button type="button"
+                <button type="submit"
                   className={`bg-hs-darkslategray text-hs-gainsboro text-lg  font-semibold w-3/4 mx-auto rounded-lg p-3`}
                 >
                   Sign In
