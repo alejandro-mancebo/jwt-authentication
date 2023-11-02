@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosPrivate } from "../../api/axios";
+import { axiosPublic } from "../../api/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm, useController } from "react-hook-form";
@@ -94,7 +94,7 @@ export default function SignUpPage() {
       };
 
       // Use axios
-      await axiosPrivate.post('/signup',
+      await axiosPublic.post('/signup',
         JSON.stringify({ newUser }), {
         headers: {
           "Accept": "application/json",

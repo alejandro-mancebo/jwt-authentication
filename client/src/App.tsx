@@ -6,6 +6,8 @@ import SignUpPage from './pages/signup-page';
 import LoginPage from './pages/login-page';
 import UserProfilePage from './pages/user-profile-page';
 import UsersPage from './pages/users-page';
+import Page404 from './pages/page-404'
+import { PersistLogin } from './components/persist-login';
 
 import './App.css';
 
@@ -20,21 +22,26 @@ const router = createBrowserRouter(
       {/* <Route path="/unauthorized" element={<UnauthorizedPage />} /> */}
 
       {/* protect routes */}
-      <Route element={<RequireAuth />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/user-profile" element={<UserProfilePage />} />
-        <Route path="/users" element={<UsersPage />} />
-      </Route>
+      <Route element={<PersistLogin />}>
+        <Route element={<RequireAuth />}>
+          {/* <Route path="/" element={<HomePage />} /> */}
+          <Route path="/user-profile" element={<UserProfilePage />} />
+          <Route path="/users" element={<UsersPage />} />
+        </Route>
+      </Route> 
 
       {/* not found */}
-      {/* <Route path="*" element={<Page404 />} /> */}
+      <Route path="*" element={<Page404 />} />
     </Route >
   )
 )
 
 function App() {
   return (
+    <>
     <RouterProvider router={router} />
+    </>
+
   )
 }
 

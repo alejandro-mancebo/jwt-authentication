@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       required: [true, "Role is required"],
     },
-    refreshToken: String,
+    refreshToken: [String],
   },
   { timestamps: true }
 );

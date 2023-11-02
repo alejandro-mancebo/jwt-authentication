@@ -14,11 +14,10 @@ export default function UsersPage() {
     const getUsers = async () => {
 
       try {
-        console.log('response.data');
         const response = await axiosPrivate.get('/users', {
-          signal: controller.signal
+          withCredentials: true,
+          // signal: controller.signal
         });
-        console.log(response.data);
         isMounted && setUsers(response.data);
       } catch (error: any) {
         console.log('Get users error:', error);

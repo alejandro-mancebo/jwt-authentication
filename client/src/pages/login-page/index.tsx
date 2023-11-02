@@ -1,9 +1,11 @@
+
+import { useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import useAuth from "../../hooks/useAuth";
-import { axiosPrivate } from "../../api/axios";
+import { axiosPublic } from "../../api/axios";
 
 
 type User = {
@@ -21,11 +23,13 @@ const UserFormData = z.object({
 
 
 export default function LoginPage() {
-  const { setAuth }: any = useAuth();
+  const { setAuth, persist, setPersist }: any = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
+  console.log('login page location from:', from);
 
+  // console.log('LoginPage persist:', persist)
 
   const form = useForm<User>({
     defaultValues: {
@@ -42,7 +46,7 @@ export default function LoginPage() {
 
     if (user !== undefined) {
       // Use axios
-      await axiosPrivate.post('/auth',
+      await axiosPublic.post('/auth',
         JSON.stringify({ user }), {
         headers: {
           "Accept": "application/json",
@@ -53,11 +57,14 @@ export default function LoginPage() {
         .then((response) => {
           if (response.status === 201) {
             const accessToken = response.data.accessToken;
-            const { password, role } = response.data.user;
+            // const { password, role } = response.data.user;
             const user = response.data.user;
-            console.log('accessToken:', accessToken)
+            const { password, role } = user;
+            console.log('LoginPage accessToken:', accessToken)
             setAuth({ user, password, role, accessToken });
             navigate(from, { replace: true });
+            setPersist(true);
+            // localStorage.setItem("persist", "true");
           }
         })
         .catch((errors) => {
@@ -73,6 +80,16 @@ export default function LoginPage() {
         });
     }
   };
+
+
+  const togglePersist = () => {
+    setPersist((prev: any) => !prev);
+  }
+
+  useEffect(() => {
+
+    localStorage.setItem("persist", persist);
+  }, [persist])
 
   return (
     <section>
@@ -113,6 +130,18 @@ export default function LoginPage() {
                   <p className="errors">{errors.password?.message}</p>
                 )}
               </div>
+
+              <div className="persistCheck">
+                <input
+                  type="checkbox"
+                  id="persist"
+                  onChange={togglePersist}
+                  checked={persist}
+                />
+                <label htmlFor="persist">Trust This Device</label>
+
+              </div>
+
               <div className={` mt-16 mb-4 text-center`}>
                 <button type="submit"
                   className={`bg-hs-darkslategray text-hs-gainsboro text-lg  font-semibold w-3/4 mx-auto rounded-lg p-3`}

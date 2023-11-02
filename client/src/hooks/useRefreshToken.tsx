@@ -1,21 +1,23 @@
-import { axiosPrivate } from '../api/axios';
+import { axiosPublic } from '../api/axios';
 import useAuth from './useAuth';
 
 const useRefreshToken = () => {
   const { setAuth }: any = useAuth();
 
   const refresh = async () => {
-
-    const response = await axiosPrivate.get('/refresh', {
+    const response = await axiosPublic.get('/refresh', {
       withCredentials: true
     });
 
-    console.log('use refresh token')
-    console.log('useRefreshToken: ', response);
+    console.log('useRefreshToken token: ', response);
     setAuth((prev: any) => {
-      console.log(JSON.stringify(prev));
-      console.log(response.data.accessToken);
-      return { ...prev, accessToken: response.data.accessToken }
+      console.log('useRefreshToken previos token:', JSON.stringify(prev));
+      console.log('useRefreshToken current token:', response.data.accessToken);
+      return {
+        ...prev,
+        email: response.data.email,
+        accessToken: response.data.accessToken
+      }
     });
 
     return response.data.accessToken;

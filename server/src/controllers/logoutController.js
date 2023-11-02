@@ -19,12 +19,14 @@ const handleLogout = async (request, response) => {
   }
 
   // Delete refreshToken in the database
-  foundUser.refreshToken = '';
+  foundUser.refreshToken = foundUser.refreshToken.filter(rt => rt !== refreshToken);
+  console.log('foundUser.refreshToken:', foundUser.refreshToken);
+  foundUser.refreshToken = [];
   await foundUser.save();
-  console.log('user logout:', foundUser);
+  // console.log('user logout:', foundUser);
 
   response.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-  return response.sendStatus(204);
+  response.sendStatus(204);
 }
 
 export default { handleLogout };
