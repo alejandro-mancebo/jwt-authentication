@@ -8,10 +8,8 @@ const RequireAuth = () => {
   console.log('RequireAuth auth.accessToken:', auth?.accessToken);
   return (
 
-    auth?.email && auth?.accessToken 
+    auth?.accessToken
       ? <Outlet />
-
-
       : <Navigate to='/login' state={{ from: location }} replace />
 
     // auth?.email

@@ -57,14 +57,19 @@ export default function LoginPage() {
         .then((response) => {
           if (response.status === 201) {
             const accessToken = response.data.accessToken;
-            // const { password, role } = response.data.user;
+
             const user = response.data.user;
             const { password, role } = user;
             console.log('LoginPage accessToken:', accessToken)
+
             setAuth({ user, password, role, accessToken });
-            navigate(from, { replace: true });
             setPersist(true);
-            // localStorage.setItem("persist", "true");
+
+            // localStorage.setItem("jwt", accessToken);
+            // localStorage.setItem("email", user.email);
+
+            // navigate(from, { replace: true });
+            navigate('/');
           }
         })
         .catch((errors) => {
@@ -124,6 +129,7 @@ export default function LoginPage() {
                   className={` rounded-md w-full px-4 py-2 mt-3 text-lg`}
                   type="password"
                   id="password"
+                  autoComplete="false"
                   {...register("password")}
                 />
                 {errors.password?.message && (

@@ -2,7 +2,9 @@ import User from '../models/user.model.js';
 
 
 const getAllUsers = async (request, response) => {
+
   const users = await User.find({});
+  console.log('getAllUsers: ', users)
   response.json(users);
 };
 

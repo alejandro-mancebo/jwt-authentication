@@ -18,6 +18,7 @@ export const PersistLogin = () => {
 
     const verifyRefreshToken = async () => {
       try {
+        console.log('*********************************************')
         await refresh();
       } catch (error) {
         console.error(error);
@@ -26,9 +27,8 @@ export const PersistLogin = () => {
       }
     }
 
-
-    // console.log('PersistLogin persist:', persist);
-    // console.log('PersistLogin auth.accessToken:', auth?.accessToken);
+    console.log('PersistLogin persist:', persist);
+    console.log('PersistLogin auth.accessToken:', auth?.accessToken);
     // persist added here AFTER tutorial video
     // Avoids unwanted call to verifyRefreshToken
     !auth?.accessToken && persist ? verifyRefreshToken() : setIsLoading(false);
@@ -43,12 +43,13 @@ export const PersistLogin = () => {
 
   return (
     <>
-      {!persist
+      <Outlet />
+      {/* {!persist
         ? <Outlet />
         : isLoading
           ? <p>Loading...</p>
           : <Outlet />
-      }
+      } */}
     </>
   )
 }

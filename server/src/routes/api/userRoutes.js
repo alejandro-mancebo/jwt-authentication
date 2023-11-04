@@ -6,14 +6,14 @@ import { users } from '../../data/users.data.js';
 const usersRouter = Router();
 
 
-usersRouter.get('/users', (request, response) => {
-  response.json(users);
-});
+// usersRouter.get('/users', (request, response) => {
+//   response.json(users);
+// });
 
 
-usersRouter.get('/user', AuthenticateToken, (request, response) => {
-  response.json(users.filter(user => user.email == request.user.email));
-});
+// usersRouter.get('/user', AuthenticateToken, (request, response) => {
+//   response.json(users.filter(user => user.email == request.user.email));
+// });
 
 export default usersRouter;
 

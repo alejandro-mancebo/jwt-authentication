@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-import useRefreshToken from '../../hooks/useRefreshToken';
+// import useRefreshToken from '../../hooks/useRefreshToken';
 
 export default function UsersPage() {
   const [users, setUsers] = useState<any>();
   const axiosPrivate = useAxiosPrivate();
-  const refresh = useRefreshToken();
+  // const refresh = useRefreshToken();
 
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
+    // let isMounted = true;
+    // const controller = new AbortController();
 
     const getUsers = async () => {
 
@@ -18,7 +18,7 @@ export default function UsersPage() {
           withCredentials: true,
           // signal: controller.signal
         });
-        isMounted && setUsers(response.data);
+        // isMounted && setUsers(response.data);
       } catch (error: any) {
         console.log('Get users error:', error);
       }
@@ -26,10 +26,10 @@ export default function UsersPage() {
 
     getUsers();
 
-    return () => {
-      isMounted = false;
-      controller.abort();
-    }
+    // return () => {
+    //   isMounted = false;
+    //   controller.abort();
+    // }
 
   }, []);
 
@@ -40,7 +40,7 @@ export default function UsersPage() {
         ? (
           <ul>
             {users.map((user: any, index: number) => (
-              <li key={index}>{user?.name}</li>
+              <li key={index}>{user?.email}</li>
             ))}
           </ul>
         ) : (
@@ -48,7 +48,7 @@ export default function UsersPage() {
         )
       }
 
-      <button type="button" onClick={() => refresh()}>refresh</button>
+      {/* <button type="button" onClick={() => refresh()}>refresh</button> */}
     </article>
   )
 }

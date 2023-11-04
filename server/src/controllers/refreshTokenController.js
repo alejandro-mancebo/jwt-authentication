@@ -13,7 +13,7 @@ const handleRefreshToken = async (request, response) => {
   const refreshToken = cookies.jwt;
 
   // Delete the cookie
-  response.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+  // response.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
 
   // Find the user using refresh token
   const foundUser = await User.findOne({ refreshToken }).exec();
@@ -55,7 +55,7 @@ const handleRefreshToken = async (request, response) => {
       const accessToken = jwt.sign(
         { "UserInfo": { "email": decoded.email, "role": decoded.role } },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '10s' }
+        { expiresIn: '60s' }
       );
 
 

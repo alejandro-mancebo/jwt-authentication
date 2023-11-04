@@ -26,7 +26,7 @@ const handleLogin = async (request, response) => {
     if (await bcrypt.compare(password, foundUser.password)) {
       // Create JWT token
       const accessToken = jwt.sign({ "UserInfo": { "email": foundUser.email, "role": foundUser.role } },
-        process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+        process.env.ACCESS_TOKEN_SECRET, { expiresIn: '60s' });
 
       // Create JWT refresh token
       const newRefreshToken = jwt.sign({ "email": foundUser.email },
@@ -56,7 +56,8 @@ const handleLogin = async (request, response) => {
           newRefreshTokenArray = [];
         }
 
-        response.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+        // Note: Review its implication when refresh the browser
+        // response.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
       }
 
       // Save refreshToken to the user in the database
@@ -68,9 +69,9 @@ const handleLogin = async (request, response) => {
       //response.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
       // Create Secure Cookie with refresh token
-      response.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+      response.cookie(process.env.TOKEN_NAME, newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
-      response.cookie('email', foundUser.email, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+      response.cookie(process.env.USER_NAME, foundUser.email, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
       // Send the user found and the accessTokend
       response.status(201).json({ user: foundUser, accessToken: accessToken });

@@ -7,7 +7,7 @@ export const AuthenticateToken = (request, response, next) => {
   if (!token) return response.status(401).json({ message: 'Unauthorized. Token does not exit.' });
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
-    if (error) return response.status(403).json({ message: 'Forbidden. There is not access.' });
+    if (error) return response.status(403).json({ message: 'Forbidden. There is not access.', error });
     request.user = decoded;
     next();
   })
