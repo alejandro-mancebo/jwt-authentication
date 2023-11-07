@@ -60,13 +60,12 @@ export default function LoginPage() {
 
             const user = response.data.user;
             const { password, role } = user;
-            console.log('LoginPage accessToken:', accessToken)
 
             setAuth({ user, password, role, accessToken });
             setPersist(true);
 
-            // localStorage.setItem("jwt", accessToken);
-            // localStorage.setItem("email", user.email);
+            localStorage.setItem("jwt", accessToken);
+            localStorage.setItem("email", user.email);
 
             // navigate(from, { replace: true });
             navigate('/');

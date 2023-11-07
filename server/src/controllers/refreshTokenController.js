@@ -1,11 +1,17 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 
+// Constant for cookies names and for cookies expired time
+const { TOKEN_NAME, USER_NAME } = process.env;
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
+const MAX_AGE = 24 * 60 * 60 * 1000;
+
 
 const handleRefreshToken = async (request, response) => {
-
+  console.log('\n');
+  // get request cookies from the browser
   const cookies = request.cookies;
-  // console.log('handleRefreshToken request.cookies', request.cookies);
+  console.log('refreshTokenController request.cookies:', cookies);
 
   if (!cookies?.jwt) return response.sendStatus(401);
 
@@ -15,9 +21,10 @@ const handleRefreshToken = async (request, response) => {
   // Delete the cookie
   // response.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
 
-  // Find the user using refresh token
-  const foundUser = await User.findOne({ refreshToken }).exec();
-  // console.log('Find the user using refresh token foundUser:', refreshToken);
+  // Find user using refresh token
+  const foundUser = await User.findOne({ refreshToken: refreshToken }).exec();
+  console.log('> refreshTokenController - Find refresh token:', refreshToken);
+  console.log('> refreshTokenController - Find User using refresh token:', foundUser);
 
   // if there are any user detected refresh token reuse
   if (!foundUser) {
@@ -25,54 +32,62 @@ const handleRefreshToken = async (request, response) => {
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       async (error, decoded) => {
-        // console.log('handleRefreshToken decoded:', decoded)
+        console.log('refreshTokenController verify - decoded:', decoded)
         if (error) return response.sendStatus(403); // Forbidden
-        // console.log('attempted refresh token reuse!')
         const hackedUser = await User.findOne({ email: decoded.email }).exec();
-        hackedUser.refreshToken = [];
+
+        // Note: why set user refreshToken array to empty
+        // hackedUser.refreshToken = [];
+
         const result = await hackedUser.save();
-        console.log('Result hackedUser:', result);
+        // console.log('Result hackedUser:', result);
       });
     return response.sendStatus(403); // Forbidden
   }
 
   const newRefreshTokenArray = foundUser.refreshToken.filter(rt => rt !== refreshToken);
-  // console.log('resfreshTokenController newRefreshTokenArray:', newRefreshTokenArray)
+  console.log('resfreshTokenController newRefreshTokenArray:', newRefreshTokenArray)
   jwt.verify(
     refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
+    REFRESH_TOKEN_SECRET,
     async (error, decoded) => {
+      console.log('refreshTokenController verify error:', error);
       if (error) {
-        // console.log('expired refresh token')
         foundUser.refreshToken = [...newRefreshTokenArray];
-        const result = await foundUser.save();
+        await foundUser.save();
       }
 
-      if (error || foundUser.email !== decoded.email)
+      if (error || foundUser.email !== decoded.email) {
+        console.log('(error || foundUser.email: ', foundUser.email);
+        console.log('(error || decoded.email: ', decoded);
         return response.sendStatus(403); // Forbbiden
+      }
 
       // Refresh token was still valid
-      const accessToken = jwt.sign(
-        { "UserInfo": { "email": decoded.email, "role": decoded.role } },
+      const accessToken = jwt.sign({ 'email': decoded.email, "role": decoded.role },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '60s' }
       );
 
 
-      const newRefreshToken = jwt.sign({ "email": foundUser.email },
-        process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+      const newRefreshToken = jwt.sign({ 'email': foundUser.email, "role": decoded.role },
+        REFRESH_TOKEN_SECRET,
+        { expiresIn: '1d' });
 
       //saving refreshToken with current user
       foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
-      const result = await foundUser.save();
+      await foundUser.save();
 
       // Creates Secure Cookie with refresh token
-      response.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
-
+      response.cookie(TOKEN_NAME, newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: MAX_AGE });
+      response.cookie('email', decoded.email, { httpOnly: true, secure: true, sameSite: 'None', maxAge: MAX_AGE });
 
       response.json({ email: foundUser.email, accessToken: accessToken });
     }
-  );
+  ).catch(error => {
+    console.log('refreshTokenController error:', error);
+    return response.sendStatus(403); // Forbbiden
+  });
 }
 
 export default { handleRefreshToken };

@@ -20,10 +20,12 @@ export default function HomePage() {
       .then((response) => {
         if (response.status === 204) {
           setAuth({});
-          navigate('/', { replace: true });
+          //navigate('/', { replace: true });
+
           localStorage.removeItem('jwt');
           localStorage.removeItem('email');
           localStorage.removeItem('persist');
+          window.location.reload();
         }
       })
       .catch((errors) => {
@@ -48,11 +50,29 @@ export default function HomePage() {
       <hr />
       <br />
       <Link to='/'>Home</Link><br />
-      <Link to='/login'>Login</Link><br />
-      <Link to='/signup'>Sign Up</Link><br />
-      <Link to='/user-profile'>Profile</Link> <br /><hr />
+      {Object.keys(auth).length === 0
+        ? <><Link to='/login'>Login</Link> <br /></>
+        : null
+      }
+      {Object.keys(auth).length === 0
+        ? <><Link to='/signup'>Sign Up</Link><br /></>
+        : null
+      }
 
-      <button type="button" onClick={handleLogout}>logout</button>
+      {Object.keys(auth).length !== 0
+        ? <><Link to='/users'>User List</Link> <br /></>
+        : null
+      }
+
+      {Object.keys(auth).length !== 0
+        ? <><Link to='/user-profile'>Profile</Link> <br /></>
+        : null
+      }
+
+      {Object.keys(auth).length !== 0
+        ? <><hr /><button type="button" onClick={handleLogout}>logout</button></>
+        : null}
+
     </section>
   )
 }

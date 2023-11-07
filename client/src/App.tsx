@@ -5,7 +5,7 @@ import HomePage from './pages/home-page';
 import SignUpPage from './pages/signup-page';
 import LoginPage from './pages/login-page';
 import UserProfilePage from './pages/user-profile-page';
-import UsersPage from './pages/users-page';
+import Users from './pages/users-page';
 import Page404 from './pages/page-404'
 import { PersistLogin } from './components/persist-login';
 
@@ -26,7 +26,7 @@ const router = createBrowserRouter(
         <Route element={<RequireAuth />}>
           {/* <Route path="/" element={<HomePage />} /> */}
           <Route path="/user-profile" element={<UserProfilePage />} />
-          <Route path="/users" element={<UsersPage />} />
+          <Route path="/users" element={<Users />} />
         </Route>
       </Route> 
 
