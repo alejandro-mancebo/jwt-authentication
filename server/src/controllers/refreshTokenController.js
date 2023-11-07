@@ -79,7 +79,7 @@ const handleRefreshToken = async (request, response) => {
       await foundUser.save();
 
       // Creates Secure Cookie with refresh token
-      response.cookie(TOKEN_NAME, newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: MAX_AGE });
+      response.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: MAX_AGE });
       response.cookie('email', decoded.email, { httpOnly: true, secure: true, sameSite: 'None', maxAge: MAX_AGE });
 
       response.json({ email: foundUser.email, accessToken: accessToken });
