@@ -4,25 +4,25 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Name is required"],
+      required: [true, "Please name is required"],
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: [true, "Please email is required"],
       unique: true,
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: [true, "Please password is required"],
     },
     dayOfBirth: {
       type: Date,
-      required: [false, "Day of Birth is required"],
+      required: [false, "Please Day of Birth is required"],
     },
     role: {
       type: String,
       enum: ["admin", "user"],
-      required: [true, "Role is required"],
+      required: [true, "Please role is required"],
     },
     refreshToken: [String],
   },

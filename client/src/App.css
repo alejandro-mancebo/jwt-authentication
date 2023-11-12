@@ -1,47 +1,15 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
 
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    font-family: 'Nunito', sans-serif;
-    font-size: 22px;
-    color: #fff;
-}
-
-body {
-    min-height: 100vh;
-    //background-color: dodgerblue;
-}
-
-.App {
+/* .App {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh; 
   padding: 1rem 0.5rem;
-}
+} */
 
-section {
-    width: 100%;
-    max-width: 420px;
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 1rem;
-    background-color: #e3e3e3;
-}
+
 
 form {
     display: flex;
@@ -49,6 +17,10 @@ form {
     justify-content: space-evenly;
     flex-grow: 1;
     padding-bottom: 1rem;
+}
+
+a {
+  decoration: none;
 }
 
 a, a:visited {
@@ -61,24 +33,61 @@ input[type="password"],
 input[type="date"],
 button,
 textarea {
+  width: 100%;
   font-family: 'Nunito', sans-serif;
   font-size: 22px;
-  padding: 0.25rem;
-  border-radius: 0.5rem;
+  padding: 0.3rem;
+  border-radius: 0.3rem; 
+  border: 1px solid #d3d3d3;
+  display: block;
 }
 
-label,
-button {
+input:focus {
+  outline: 1px solid steelblue;
+}
+
+label {
   margin-top: 1rem;
+  font-size: .8rem;
 }
 
 button {
   padding: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
-li {
-  text-decoration: none;
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
 }
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 1px auto -webkit-focus-ring-color;
+}
+
+
+li {
+  list-style-type: none;
+}
+
+#login , #signup {
+  margin-top: 3rem;
+  border-radius: .7rem;
+}
+
 
 .instructions {
     font-size: 0.75rem;
@@ -130,4 +139,9 @@ li {
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
+}
+
+.errors {
+  color: red;
+  font-size: .7rem;
 }

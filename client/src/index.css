@@ -14,39 +14,77 @@
   -webkit-text-size-adjust: 100%;
 }
 
+#root {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  /* padding: 2rem; */
+  /* text-align: center; */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    color: #fff;
+}
+
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
 
+header {
+  width: 100vw;
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #d5d5d5;
+  padding: 0 9rem;
+}
+
+header button {
+  margin: 0;
+  padding-left: 0;
+}
+
+header a {
+  padding: 0 1rem;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+}
+
+main {
+  width: 40vw;
+  margin: 0 auto;
+}
+
+section {
+  /* max-width: 6vw; */
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 1rem;
+  background-color: #e3e3e3;
+}
+
 h1 {
-  font-size: 2em;
-  line-height: 1.1;
+  font-size: 1.3rem;
+  line-height: 1.5;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
 
 @media (prefers-color-scheme: light) {
   :root {

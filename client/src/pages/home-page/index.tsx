@@ -42,37 +42,14 @@ export default function HomePage() {
 
   return (
     <section>
-      <h1>Home Page</h1>
-      {Object.keys(auth).length !== 0
-        ? <p> {auth?.user.email} </p>
-        : null
+      {Object.keys(auth).length !== 0 
+        ? <>
+          <h1>Home Page</h1>
+          <div><Link to='/users'>User List</Link></div>
+          <div><Link to='/user-profile'>Profile</Link> </div>
+        </>
+        : <div>Welcome to the JWT Authentication example</div>
       }
-      <hr />
-      <br />
-      <Link to='/'>Home</Link><br />
-      {Object.keys(auth).length === 0
-        ? <><Link to='/login'>Login</Link> <br /></>
-        : null
-      }
-      {Object.keys(auth).length === 0
-        ? <><Link to='/signup'>Sign Up</Link><br /></>
-        : null
-      }
-
-      {Object.keys(auth).length !== 0
-        ? <><Link to='/users'>User List</Link> <br /></>
-        : null
-      }
-
-      {Object.keys(auth).length !== 0
-        ? <><Link to='/user-profile'>Profile</Link> <br /></>
-        : null
-      }
-
-      {Object.keys(auth).length !== 0
-        ? <><hr /><button type="button" onClick={handleLogout}>logout</button></>
-        : null}
-
     </section>
   )
 }

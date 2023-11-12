@@ -29,7 +29,8 @@ const handleLogin = async (request, response) => {
   try {
     // Evaluate password
     if (await bcrypt.compare(password, foundUser.password)) {
-      // Create JWT token
+      // Generate JWT token
+
       const accessToken = jwt.sign({ 'email': foundUser.email, "role": foundUser.role },
         ACCESS_TOKEN_SECRET, { expiresIn: '60s' });
 

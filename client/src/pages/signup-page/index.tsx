@@ -131,119 +131,81 @@ export default function SignUpPage() {
 
 
   return (
-    <section>
-      <div className=" max-w-md mx-auto p-2 overflow-hidden bg-hs-lightsteelblue md:max-w-5xl md:mx-auto  md:m-4 md:p-10 md:max-h-screen lg:max-w-6xl lg:mx-auto xl:max-w-7xl xl:mx-auto ">
-        <div className={` md:flex justify-between `}>
-          <div className={` border-solid rounded-xl md:w-5/12  md:ml-10 md:px-2 `} >
-            <div className={`w-[250px] mt-3 mb-3 mx-auto`}>
-              <h1 className={` font-bold text-2xl text-center`}>Sign Up</h1>
-            </div>
+    <section id="signup">
+      <h1 >Sign Up</h1>
 
-            <form onSubmit={handleSubmit(onSubmitHandle)}>
-              <div className=" overflow-auto  md:h-[calc(100vh-21rem)] pr-4 ">
-                <div className={` my-0`}>
-                  <label className={`mb-6 `} htmlFor="name">
-                    Name
-                  </label>
-                  <input
-                    className={` rounded-md w-full px-4 py-2 mt-3 text-lg`}
-                    type="text"
-                    id="name"
-                    autoComplete="off"
-                    {...register("name")}
-                  />
-                  {errors.name?.message && (
-                    <p className="errors">{errors.name?.message}</p>
-                  )}
-                </div>
-                <div className={` my-4`}>
-                  <label className={`mb-6 `} htmlFor="email">
-                    email
-                  </label>
-                  <input
-                    className={` rounded-md w-full px-4 py-2 mt-3 text-lg`}
-                    type="email"
-                    id="email"
-                    autoComplete="off"
-                    {...register("email")}
-                  />
-                  {errors.email?.message && (
-                    <p className="errors">{errors.email?.message}</p>
-                  )}
-                </div>
-                <div className={` mt-4 `}>
-                  <label htmlFor="password">Password</label>
-                  <input
-                    className={` rounded-md w-full px-4 py-2 mt-3 text-lg`}
-                    type="password"
-                    id="password"
-                    {...register("password")}
-                  />
-                  {errors.password?.message && (
-                    <p className="errors">{errors.password?.message}</p>
-                  )}
-                </div>
-                <div className={`  mt-4 `}>
-                  <label htmlFor="confirmPassword">Confirm Password</label>
-                  <input
-                    className={` rounded-md w-full px-4 py-2 mt-3 text-lg`}
-                    type="password"
-                    id="confirmPassword"
-                    {...register("confirmPassword")}
-                  />
-                  {errors.confirmPassword?.message && (
-                    <p className="errors">{errors.confirmPassword?.message}</p>
-                  )}
-                </div>
-                <div className={`  mt-4 `}>
-                  <label htmlFor="role">Role</label>
-                  <Select
-                    value={roleOptions.find(
-                      ({ value }) => value === field.value
-                    )}
-                    onChange={handleSelectChange}
-                    options={roleOptions}
-                    id="role"
-                  />
-                </div>
+      <form onSubmit={handleSubmit(onSubmitHandle)}>
 
-                <div className={`mt-4`}>
-                  <div className={`flex items-end justify-between `}>
-                    <div className={` `}>
-                      <label htmlFor="dayOfBirth">Day of Birth</label>
-                      <input
-                        className={` rounded-md w-40 md:w-56 px-4 py-2 mt-3 text-lg`}
-                        type="date"
-                        id="dayOfBirth"
-                        {...register("dayOfBirth")}
-                      />
-                    </div>
-                  </div>
+        <label htmlFor="name"> Name
+          <input
+            type="text"
+            id="name"
+            autoComplete="off"
+            {...register("name")}
+          />
+          {errors.name?.message && (
+            <p className="errors">{errors.name?.message}</p>
+          )} 
+        </label>
 
-                  <div className={`flex items-end justify-between `}>
-                    <div>
-                      {errors.dayOfBirth?.message && (
-                        <p className="errors">{errors.dayOfBirth?.message}</p>
-                      )}
-                    </div>
-                  </div>
+        <label htmlFor="email"> email
+          <input
+            type="email"
+            id="email"
+            autoComplete="off"
+            {...register("email")}
+          />
+          {errors.email?.message && (
+            <p className="errors">{errors.email?.message}</p>
+          )}
+        </label>
 
-                </div>
-              </div>
+        <label htmlFor="password">Password
+          <input
+            type="password"
+            id="password"
+            {...register("password")}
+          />
+          {errors.password?.message && (
+            <p className="errors">{errors.password?.message}</p>
+          )}
+        </label>
 
-              <div className=" my-4 text-center ">
-                <button
-                  className="bg-hs-darkslategray text-hs-gainsboro text-lg  font-semibold w-3/4 mx-auto rounded-lg p-3 "
-                  type="submit"
-                >
-                  Sign Up
-                </button>
-              </div>
-            </form>
+        <label htmlFor="confirmPassword">Confirm Password
+          <input
+            type="password"
+            id="confirmPassword"
+            {...register("confirmPassword")}
+          />
+          {errors.confirmPassword?.message && (
+            <p className="errors">{errors.confirmPassword?.message}</p>
+          )}
+        </label>
 
-          </div>
-        </div>
-      </div>
+        <label htmlFor="role">Role
+          <Select
+            value={roleOptions.find(
+              ({ value }) => value === field.value
+            )}
+            onChange={handleSelectChange}
+            options={roleOptions}
+            id="role"
+          />
+        </label>
+
+        <label htmlFor="dayOfBirth">Day of Birth
+          <input
+            type="date"
+            id="dayOfBirth"
+            {...register("dayOfBirth")}
+          />
+          {errors.dayOfBirth?.message && (
+            <p className="errors">{errors.dayOfBirth?.message}</p>
+          )}
+        </label>
+
+        <button type="submit" >Sign Up</button>
+      </form>
     </section>
   );
 }
