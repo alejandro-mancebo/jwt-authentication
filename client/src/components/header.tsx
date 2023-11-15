@@ -1,30 +1,10 @@
-// import IMAGES from "../images/images";
-import { NavLink, useLocation } from "react-router-dom";
-// import { Avatar } from "@mui/material";
-// import { useContext } from "react";
-// import { AppContext } from "../hooks/index"; // Update the path to match your file structure
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import useAuth from '../../src/hooks/useAuth';
 import { axiosPrivate } from '../api/axios';
 
 
 export const Header = () => {
-  // const authContext = useContext(AppContext);
-  const { pathname } = useLocation();
   const { auth, setAuth }: any = useAuth();
-  console.log(pathname);
-
-  const navigate = useNavigate();
-
-  // console.log(authContext.isLoggedIn);
-
-  // const handleLogout = () => {
-  //   // Call the logout function from your context to log the user out.
-  //   // authContext.logout();
-  //   navigate("/login", {
-  //     replace: true,
-  //   });
-  // };
 
 
   const handleLogout = async () => {

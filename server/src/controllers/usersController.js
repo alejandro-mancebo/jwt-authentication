@@ -34,7 +34,6 @@ const deleteUser = (request, response) => {
 
 
 const getUser = (request, response) => {
-  console.log('--------------------------', request.params.id)
   response.json({ "id": request.params.id });
 };
 

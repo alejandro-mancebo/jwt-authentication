@@ -1,20 +1,17 @@
 import { useState, useEffect } from 'react';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-// import useRefreshToken from '../../hooks/useRefreshToken';
 
 export const UserProfile = () => {
 
   const [users, setUsers] = useState<any>();
   const axiosPrivate = useAxiosPrivate();
-  // const refresh = useRefreshToken();
 
 
   useEffect(() => {
-    axiosPrivate.get('/user/653b2bb62eb108a05e8c0b27', {
+    axiosPrivate.get('/user', {
       withCredentials: true,
     })
       .then((response) => {
-        console.log('users list:', users)
         setUsers(response.data);
       })
       .catch(error => {
@@ -23,32 +20,6 @@ export const UserProfile = () => {
 
   }, [])
 
-
-  // useEffect(() => {
-  // let isMounted = true;
-  // const controller = new AbortController();
-
-  // const getUsers = async () => {
-
-  // try {
-  //   const response = await axiosPrivate.get('/users', {
-  //     withCredentials: true,
-  // signal: controller.signal
-  // });
-  // isMounted && setUsers(response.data);
-  //   } catch (error: any) {
-  //     console.log('Get users error:', error);
-  //   }
-  // }
-
-  // getUsers();
-
-  // return () => {
-  //   isMounted = false;
-  //   controller.abort();
-  // }
-
-  // }, []);
 
   return (
     <article>

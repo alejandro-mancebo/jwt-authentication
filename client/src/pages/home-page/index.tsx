@@ -22,8 +22,8 @@ export default function HomePage() {
           setAuth({});
           //navigate('/', { replace: true });
 
-          localStorage.removeItem('jwt');
-          localStorage.removeItem('email');
+          // localStorage.removeItem('jwt');
+          // localStorage.removeItem('email');
           localStorage.removeItem('persist');
           window.location.reload();
         }

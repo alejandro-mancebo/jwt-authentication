@@ -14,17 +14,15 @@ import './App.css';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
+
       {/* public routes */}
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignUpPage />} />
-      {/* <Route path="/link-page" element={<LinkPage />} /> */}
-      {/* <Route path="/unauthorized" element={<UnauthorizedPage />} /> */}
 
       {/* protect routes */}
       <Route element={<PersistLogin />}>
         <Route element={<RequireAuth />}>
-          {/* <Route path="/" element={<HomePage />} /> */}
           <Route path="/user-profile" element={<UserProfilePage />} />
           <Route path="/users" element={<Users />} />
         </Route>
@@ -39,9 +37,8 @@ const router = createBrowserRouter(
 function App() {
   return (
     <>
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </>
-
   )
 }
 

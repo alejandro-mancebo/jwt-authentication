@@ -4,13 +4,12 @@ import { validationResult } from 'express-validator';
 import User from '../models/user.model.js';
 
 
-const { TOKEN_NAME_KEY, USER_NAME_KEY } = process.env;
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 const MAX_AGE = 24 * 60 * 60 * 1000;
 
 
 const handleLogin = async (request, response) => {
-  console.log('\n');
+
   const cookies = request.cookies;
   console.log(`authController cookie available at login: ${JSON.stringify(cookies)}`);
 
@@ -19,33 +18,32 @@ const handleLogin = async (request, response) => {
   if (!error.isEmpty())
     response.status(400).json({ 'message': 'Email and password are required!!!' });
 
+  // Destructing user valiables
   const { email, password } = request.body.user;
 
   // Find and check if there are any user. If there aren't return
   const foundUser = await User.findOne({ email: email }).exec();
   if (!foundUser) return response.sendStatus(401); // Unauthorized
 
-
   try {
     // Evaluate password
     if (await bcrypt.compare(password, foundUser.password)) {
-      // Generate JWT token
 
-      const accessToken = jwt.sign({ 'email': foundUser.email, "role": foundUser.role },
-        ACCESS_TOKEN_SECRET, { expiresIn: '60s' });
+      const id = foundUser._id.toJSON();
 
-      // Create JWT refresh token
-      const newRefreshToken = jwt.sign({ 'email': foundUser.email, "role": foundUser.role },
-        REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+      // Generate access token
+      const accessToken = jwt.sign({ '_id': id, "role": foundUser.role },
+        ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+
+      // Generate refresh token
+      const refreshToken = jwt.sign({ '_id': id, "role": foundUser.role },
+        REFRESH_TOKEN_SECRET, { expiresIn: '1w' });
 
       // Changed to let keyword
-      let newRefreshTokenArray =
+      let refreshTokenArray =
         !cookies?.jwt
           ? foundUser.refreshToken
           : foundUser.refreshToken.filter(rt => rt !== cookies.jwt);
-
-      console.log('foundUser.refreshToken:', foundUser.refreshToken)
-      console.log('foundUser.refreshToken.filter(rt => rt !== cookies.jwt):', foundUser.refreshToken.filter(rt => rt !== cookies.jwt))
 
       if (cookies?.jwt) {
         /* 
@@ -69,15 +67,17 @@ const handleLogin = async (request, response) => {
       }
 
       // Save refreshToken to the user in the database
-      foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
+      foundUser.refreshToken = [...refreshTokenArray, refreshToken];
       await foundUser.save();
 
       // Note: secure: true at production
       // response.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'None', maxAge: MAX_AGE });
 
+      // Create Secure Cookie with access token
+      response.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: MAX_AGE }); // 1 day
+
       // Create Secure Cookie with refresh token
-      response.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: MAX_AGE });
-      response.cookie('email', foundUser.email, { httpOnly: true, secure: true, sameSite: 'None', maxAge: MAX_AGE });
+      response.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 7 * MAX_AGE }); // 1 week
 
       // Send found user and accessToken
       response.status(201).json({ user: foundUser, accessToken: accessToken });

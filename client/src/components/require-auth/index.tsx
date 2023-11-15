@@ -4,10 +4,8 @@ import useAuth from '../../hooks/useAuth';
 const RequireAuth = () => {
   const { auth }: any = useAuth();
   const location = useLocation();
-  console.log('RequireAuth auth.user:', auth?.email);
-  console.log('RequireAuth auth.accessToken:', auth?.accessToken);
-  return (
 
+  return (
     auth?.accessToken
       ? <Outlet />
       : <Navigate to='/login' state={{ from: location }} replace />
@@ -18,7 +16,6 @@ const RequireAuth = () => {
     //     ? <Navigate to='/use-profile' state={{ from: location }} replace />
     //     : <Navigate to='/login' state={{ from: location }} replace />
   )
-
 }
 
 export default RequireAuth;

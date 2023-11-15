@@ -9,16 +9,12 @@ export const PersistLogin = () => {
   const refresh = useRefreshToken();
   const { auth, persist }: any = useAuth();
 
-  console.log('PersistLogin persist start:', persist);
-  console.log('PersistLogin auth.accessToken start:', auth?.accessToken);
-
   useEffect(() => {
 
     let isMounted = true;
 
     const verifyRefreshToken = async () => {
       try {
-        console.log('*********************************************')
         await refresh();
       } catch (error) {
         console.error(error);
@@ -27,8 +23,6 @@ export const PersistLogin = () => {
       }
     }
 
-    console.log('PersistLogin persist:', persist);
-    console.log('PersistLogin auth.accessToken:', auth?.accessToken);
     // persist added here AFTER tutorial video
     // Avoids unwanted call to verifyRefreshToken
     !auth?.accessToken && persist ? verifyRefreshToken() : setIsLoading(false);

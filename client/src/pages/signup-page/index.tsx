@@ -32,8 +32,9 @@ const UserFormData = z
     name: z.string().trim().nonempty("Please enter your name"),
     email: z
       .string()
-      .nonempty("Please enter your email")
-      .email({ message: "Please enter a valid email address " }),
+      .toLowerCase()
+      .min(1, { message: "Please enter your email" })
+      .email({ message: "Please enter a valid email address" }),
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters" }),
@@ -71,14 +72,12 @@ export default function SignUpPage() {
   const { field } = useController({ name: "role", control });
 
   const handleSelectChange = (option: IRoles | null) => {
-    console.log("roleOption", option);
 
     field.onChange(option?.value);
 
     if (option?.value == "admin") setIsDisabled(true);
     else setIsDisabled(false);
 
-    console.log("roleOption", option?.value);
   };
 
   const onSubmitHandle = async (data: IUser) => {

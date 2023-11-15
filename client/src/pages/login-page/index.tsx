@@ -1,6 +1,6 @@
 
 import { useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -15,7 +15,9 @@ type User = {
 
 
 const UserFormData = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
+  email: z
+    .string()
+    .email({ message: "Please enter a valid email address" }),
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters" }),
@@ -25,11 +27,6 @@ const UserFormData = z.object({
 export default function LoginPage() {
   const { setAuth, persist, setPersist }: any = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
-  console.log('login page location from:', from);
-
-  // console.log('LoginPage persist:', persist)
 
   const form = useForm<User>({
     defaultValues: {
@@ -56,16 +53,18 @@ export default function LoginPage() {
       })
         .then((response) => {
           if (response.status === 201) {
-            const accessToken = response.data.accessToken;
 
+            const accessToken = response.data.accessToken;
             const user = response.data.user;
             const { password, role } = user;
+
+            axiosPublic.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
             setAuth({ user, password, role, accessToken });
             setPersist(true);
 
-            localStorage.setItem("jwt", accessToken);
-            localStorage.setItem("email", user.email);
+            // localStorage.setItem("jwt", accessToken);
+            // localStorage.setItem("email", user.email);
 
             // navigate(from, { replace: true });
             navigate('/');
@@ -90,19 +89,18 @@ export default function LoginPage() {
     setPersist((prev: any) => !prev);
   }
 
-  useEffect(() => {
 
+  useEffect(() => {
     localStorage.setItem("persist", persist);
   }, [persist])
 
+
   return (
     <section id="login">
-      <h1 className={` font-bold text-2xl text-center`}>
-        Login
-      </h1>
+      <h1>Login</h1>
 
       <form onSubmit={handleSubmit(onSubmitHandle)}>
-        <label htmlFor="email"> email
+        <label htmlFor="email">email
           <input
                   type="email"
                   id="email"
@@ -136,9 +134,7 @@ export default function LoginPage() {
           &nbsp;Trust This Device
         </label>
 
-        <button type="submit">
-          Sign In
-        </button>
+        <button type="submit">Sign In</button>
 
         <p className={` text-center`}>
           Don't have any account &nbsp;
