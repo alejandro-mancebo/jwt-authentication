@@ -1,5 +1,4 @@
 import { createContext, useState } from 'react';
-// import useRefreshToken from '../hooks/useRefreshToken';
 
 const AuthContext = createContext({});
 
@@ -15,13 +14,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
   const [persist, setPersist] = useState(persistValue);
 
-
   if (persist && Object.keys(auth).length === 0) {
-    const authStore = localStorage.getItem("jwt");
-    const emailStore = localStorage.getItem("email");
-    setAuth({ accessToken: authStore, user: { email: emailStore } });
+    setAuth({ accessToken: auth.accessToken, user: { _id: auth._id, name: auth.name } });
   }
-
 
   return (
     <AuthContext.Provider value={{ auth, setAuth, persist, setPersist }}>

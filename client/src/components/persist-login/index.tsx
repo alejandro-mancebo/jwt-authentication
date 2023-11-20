@@ -5,9 +5,10 @@ import useAuth from "../../hooks/useAuth";
 
 
 export const PersistLogin = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const refresh = useRefreshToken();
   const { auth, persist }: any = useAuth();
+
 
   useEffect(() => {
 
@@ -15,7 +16,8 @@ export const PersistLogin = () => {
 
     const verifyRefreshToken = async () => {
       try {
-        await refresh();
+        const accessToken = await refresh();
+        // console.log('[verifyRefreshToken] refresh:', accessToken);
       } catch (error) {
         console.error(error);
       } finally {
@@ -31,8 +33,9 @@ export const PersistLogin = () => {
   }, []);
 
   useEffect(() => {
-    console.log('PersistLogin isLoading:', isLoading);
-    console.log('PersistLogin auth.accessToken:', JSON.stringify(auth?.accessToken));
+    localStorage.setItem('isLoading', isLoading.toString());
+    // console.log('[PersistLogin] isLoading:', isLoading);
+    // console.log('[PersistLogin] auth:', auth);
   }, [isLoading]);
 
   return (

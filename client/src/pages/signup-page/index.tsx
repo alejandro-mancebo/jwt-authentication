@@ -29,7 +29,8 @@ const roleOptions: IRoles[] = [
 
 const UserFormData = z
   .object({
-    name: z.string().trim().nonempty("Please enter your name"),
+    firstName: z.string().trim().min(1, "Please enter your first name"),
+    lastName: z.string().trim().min(1, "Please enter your last name"),
     email: z
       .string()
       .toLowerCase()
@@ -57,7 +58,8 @@ export default function SignUpPage() {
 
   const form = useForm<IUser>({
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -85,7 +87,8 @@ export default function SignUpPage() {
 
     if (data !== undefined) {
       newUser = {
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         password: data.password,
         dayOfBirth: data.dayOfBirth,
@@ -112,17 +115,21 @@ export default function SignUpPage() {
           }
         })
         .catch((error) => {
+          let errorMessage;
           if (!error?.response) {
-            console.log('No server response');
+            errorMessage = 'No server response';
+            console.error('No server response');
           } else if (error?.response.status === 409) {
-            console.log('User exist');
+            errorMessage = 'User exist';
+            console.error('User exist');
           } else {
-            console.log('Registration failed');
+            errorMessage = 'Registration failed'
+            console.error('Registration failed');
           }
           Swal.fire({
             icon: "error",
-            title: "fail...",
-            text: "Failed to register!",
+            title: "Fail...!!!",
+            text: errorMessage
           });
         })
     }
@@ -135,17 +142,32 @@ export default function SignUpPage() {
 
       <form onSubmit={handleSubmit(onSubmitHandle)}>
 
-        <label htmlFor="name"> Name
+        <div>
+          <label htmlFor="firstName"> First name
           <input
             type="text"
-            id="name"
+              id="firstName"
             autoComplete="off"
-            {...register("name")}
+              {...register("firstName")}
           />
-          {errors.name?.message && (
-            <p className="errors">{errors.name?.message}</p>
-          )} 
+            {errors.firstName?.message && (
+              <p className="errors">{errors.firstName?.message}</p>
+            )}
         </label>
+
+          <label htmlFor="lastName"> Last name
+            <input
+              type="text"
+              id="lastName"
+              autoComplete="off"
+              {...register("lastName")}
+            />
+            {errors.lastName?.message && (
+              <p className="errors">{errors.lastName?.message}</p>
+            )}
+          </label>
+        </div>
+
 
         <label htmlFor="email"> email
           <input
@@ -181,27 +203,31 @@ export default function SignUpPage() {
           )}
         </label>
 
-        <label htmlFor="role">Role
-          <Select
-            value={roleOptions.find(
-              ({ value }) => value === field.value
-            )}
-            onChange={handleSelectChange}
-            options={roleOptions}
-            id="role"
-          />
-        </label>
+        <div>
+          <label htmlFor="role">Role
+            <Select
+              value={roleOptions.find(
+                ({ value }) => value === field.value
+              )}
+              onChange={handleSelectChange}
+              options={roleOptions}
+              id="role"
+            />
+          </label>
 
         <label htmlFor="dayOfBirth">Day of Birth
           <input
-            type="date"
-            id="dayOfBirth"
-            {...register("dayOfBirth")}
-          />
-          {errors.dayOfBirth?.message && (
-            <p className="errors">{errors.dayOfBirth?.message}</p>
-          )}
-        </label>
+              type="date"
+              id="dayOfBirth"
+              {...register("dayOfBirth")}
+            />
+            {errors.dayOfBirth?.message && (
+              <p className="errors">{errors.dayOfBirth?.message}</p>
+            )}
+          </label>
+        </div>
+
+
 
         <button type="submit" >Sign Up</button>
       </form>

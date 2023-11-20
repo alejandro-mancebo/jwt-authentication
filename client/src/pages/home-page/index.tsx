@@ -30,11 +30,11 @@ export default function HomePage() {
       })
       .catch((errors) => {
         if (!errors) {
-          console.log('No server response');
+          console.error('[Home page] No server response');
         } else if (errors) {
-          console.log('Something happend');
+          console.error('[Home page] Something happend');
         } else {
-          console.log('Logout failed');
+          console.error('[Home page] Logout failed');
         }
       });
   };

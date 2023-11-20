@@ -12,7 +12,7 @@ const handleSignUp = async (request, response) => {
     response.status(400).json({ 'message': 'The information supplied is Incorrect' });
 
   // Get the user data from the body of the request 
-  const { name, email, password, dayOfBirth, role } = request.body.newUser;
+  const { firstName, lastName, email, password, dayOfBirth, role } = request.body.newUser;
 
   // Check for duplicate user email in the database
   const duplicateUser = await User.findOne({ email: email }).exec();
@@ -29,7 +29,8 @@ const handleSignUp = async (request, response) => {
 
     // create new user with encrypted password
     const createNewUser = new User({
-      name: name,
+      firstName: firstName,
+      lastName: lastName,
       email: email,
       password: hashedPassword,
       dayOfBirth: dayOfBirth,

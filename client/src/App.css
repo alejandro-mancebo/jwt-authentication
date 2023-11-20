@@ -9,7 +9,13 @@
   padding: 1rem 0.5rem;
 } */
 
+section {
+  margin-top: 1rem;
+}
 
+section h1 {
+  border-bottom: 1px solid #c3c3c3;
+}
 
 form {
     display: flex;
@@ -19,13 +25,6 @@ form {
     padding-bottom: 1rem;
 }
 
-a {
-  decoration: none;
-}
-
-a, a:visited {
-    color: #00a;
-}
 
 input[type="text"],
 input[type="email"],
@@ -40,6 +39,7 @@ textarea {
   border-radius: 0.3rem; 
   border: 1px solid #d3d3d3;
   display: block;
+  line-height: 1.5;
 }
 
 input:focus {
@@ -51,36 +51,15 @@ label {
   font-size: .8rem;
 }
 
-button {
+#login button, #signup button {
   padding: 0.5rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
+#login button:hover,
+#signup button:hover {
   border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 1px auto -webkit-focus-ring-color;
-}
-
-
-li {
-  list-style-type: none;
 }
 
 #login , #signup {
@@ -88,6 +67,83 @@ li {
   border-radius: .7rem;
 }
 
+#signup form > div {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+}
+
+#signup form > div > label {
+  width: 49%;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 1px auto -webkit-focus-ring-color;
+}
+
+ul {
+  padding-top: 1rem;
+  padding-left: 2rem;
+  
+}
+
+li {
+display: flex;
+justify-content: space-between;
+aling-items: center;
+margin-bottom: .4em;
+}
+
+li:hover{
+  border-bottom: 1px solid #b3b3b3;
+}
+
+li button {
+    padding: 0 .7rem;
+  font-size: .9rem;
+}
+
+.update-delete {
+  display: flex;
+  gap: .4em;
+}
+
+button.update {
+  border: 1px solid limegreen;
+  color: limegreen;
+  cursor: pointer;
+}
+
+button.update:hover {
+  background-color: limegreen;
+  color: #000;
+}
+
+button.delete {
+  border: 1px solid red;
+  color: red;
+  cursor: pointer;
+}
+
+button.delete:hover {
+  background-color: red;
+  color: #000;
+}
+
+
+.profile {
+  padding-top: 1rem;
+  padding-left: 1rem;
+}
+
+.profile span {
+  font-weight: 500;
+}
+
+.profile div {
+  padding: 0.15rem 0;
+}
 
 .instructions {
     font-size: 0.75rem;

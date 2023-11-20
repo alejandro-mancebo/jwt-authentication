@@ -1,10 +1,22 @@
 import { NavLink } from "react-router-dom";
 import useAuth from '../../src/hooks/useAuth';
 import { axiosPrivate } from '../api/axios';
+import { useEffect, useState } from "react";
 
 
 export const Header = () => {
   const { auth, setAuth }: any = useAuth();
+  const [username, setUsername] = useState<string>();
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+
+  const usernameStore = localStorage.getItem('username') || '';
+
+  useEffect(() => {
+    if (Object.keys(auth).length !== 0) {
+      setIsAuth(true)
+      setUsername(usernameStore);
+    }
+  }, [auth, username]);
 
 
   const handleLogout = async () => {
@@ -22,19 +34,19 @@ export const Header = () => {
           setAuth({});
           //navigate('/', { replace: true });
 
-          localStorage.removeItem('jwt');
-          localStorage.removeItem('email');
           localStorage.removeItem('persist');
+          // localStorage.removeItem('isLoading');
+          localStorage.removeItem('username');
           window.location.reload();
         }
       })
       .catch((errors) => {
         if (!errors) {
-          console.log('No server response');
+          console.error('[header] No server response');
         } else if (errors) {
-          console.log('Something happend');
+          console.error('[header] Something happend');
         } else {
-          console.log('Logout failed');
+          console.error('[header] Logout failed');
         }
       });
   };
@@ -44,33 +56,32 @@ export const Header = () => {
     <header >
       <div >
         <NavLink to={"/"}>Home</NavLink>
-        {Object.keys(auth).length !== 0 && (
+        {isAuth && usernameStore ?
           <>
             <NavLink to='/users'>User List</NavLink>
-            <NavLink to='/user-profile'>Profile</NavLink>
+            {/* <NavLink to='/user-profile'>Profile</NavLink> */}
           </>
-        )}
+          : null
+        }
       </div>
 
-      <nav className="">
-        <span>
-          {Object.keys(auth).length !== 0
-            ? <p> {auth?.user.name} </p>
+      <nav >
+        <span >
+          {isAuth && usernameStore
+            ? <NavLink to='/user-profile'>{username}</NavLink>
             : null
           }
         </span>
 
-        {Object.keys(auth).length === 0
-          ? <NavLink to='/signup'>Sign Up</NavLink>
+        {!isAuth ?
+          <div>
+            <NavLink to='/signup'>Sign Up</NavLink>
+            <NavLink to='/login'>Login</NavLink>
+          </div>
           : null
         }
 
-        {Object.keys(auth).length === 0
-          ? <NavLink to='/login'>Login</NavLink>
-          : null
-        }
-
-        {Object.keys(auth).length !== 0
+        {isAuth
           ? <button type="button" onClick={handleLogout}>logout</button>
           : null
         }

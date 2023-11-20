@@ -68,5 +68,5 @@ try {
     console.log('The Authentification Server is running on port:', PORT);
   });
 } catch (error) {
-  console.log(error)
+  console.error('connectMongoDB:', error.message)
 }

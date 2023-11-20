@@ -1,7 +1,7 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 300;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -52,12 +52,31 @@ header {
 }
 
 header button {
-  margin: 0;
-  padding-left: 0;
+  margin-left: 1rem;
+  border-radius: 8px;
+  padding: 0.4em 1.2em;
+  cursor: pointer;
+}
+
+header button:hover {
+  border-color: #646cff;
 }
 
 header a {
-  padding: 0 1rem;
+  padding: .5rem;
+  text-decoration: none;
+}
+
+header a:hover {
+  background-color: #596fb6;
+  color: white;
+}
+
+header nav a:hover  {
+  background-color: initial;
+  color: #00a;
+  font-weight: 400;
+  border-bottom: 2px solid #596fb6;
 }
 
 nav {
@@ -81,9 +100,17 @@ section {
 }
 
 h1 {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   line-height: 1.5;
+  font-weight: 500;
 }
+
+
+a, a:visited {
+    color: #00a;
+}
+
+
 
 
 @media (prefers-color-scheme: light) {

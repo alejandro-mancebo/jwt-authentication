@@ -7,6 +7,9 @@ router.route('/')
   .get(UsersController.getAllUsers)
   .post(UsersController.createNewUser)
   .put(UsersController.updateUser)
+
+
+router.route('/:id')
   .delete(UsersController.deleteUser);
 
 router.route('/:id')

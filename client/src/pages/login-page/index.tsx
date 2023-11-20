@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import useAuth from "../../hooks/useAuth";
 import { axiosPublic } from "../../api/axios";
-
+import Swal from "sweetalert2";
 
 type User = {
   email: string;
@@ -62,24 +62,32 @@ export default function LoginPage() {
 
             setAuth({ user, password, role, accessToken });
             setPersist(true);
-
-            // localStorage.setItem("jwt", accessToken);
-            // localStorage.setItem("email", user.email);
+            localStorage.setItem('username', user.firstName);
 
             // navigate(from, { replace: true });
             navigate('/');
           }
         })
         .catch((errors) => {
+          let errorMessage;
           if (!errors?.response) {
-            console.log('No server response');
+            errorMessage = 'No server response';
+            console.error('No server response');
           } else if (errors?.response.status === 400) {
-            console.log('Missing username or password');
+            errorMessage = 'Missing username or password';
+            console.error('Missing username or password');
           } else if (errors?.response.status === 401) {
-            console.log('Unauthorized');
+            errorMessage = 'Unauthorized';
+            console.error('Unauthorized');
           } else {
-            console.log('Login failed');
+            errorMessage = 'Login failed';
+            console.error('Login failed');
           }
+          Swal.fire({
+            icon: "error",
+            title: "Fail...!!!",
+            text: errorMessage
+          });
         });
     }
   };

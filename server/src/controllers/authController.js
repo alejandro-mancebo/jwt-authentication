@@ -11,7 +11,7 @@ const MAX_AGE = 24 * 60 * 60 * 1000;
 const handleLogin = async (request, response) => {
 
   const cookies = request.cookies;
-  console.log(`authController cookie available at login: ${JSON.stringify(cookies)}`);
+  console.error(`authController cookie available at login: ${JSON.stringify(cookies)}`);
 
   // Validate request data
   const error = validationResult(request);
@@ -41,11 +41,11 @@ const handleLogin = async (request, response) => {
 
       // Changed to let keyword
       let refreshTokenArray =
-        !cookies?.jwt
+        !cookies?.refreshToken
           ? foundUser.refreshToken
-          : foundUser.refreshToken.filter(rt => rt !== cookies.jwt);
+          : foundUser.refreshToken.filter(rt => rt !== cookies.refreshToken);
 
-      if (cookies?.jwt) {
+      if (cookies?.refresh) {
         /* 
         Scenario added here: 
           1) User logs in but never uses RT and does not logout 
@@ -53,13 +53,13 @@ const handleLogin = async (request, response) => {
           3) If 1 & 2, reuse detection is needed to clear all RTs when user logs in
         */
 
-        const refreshToken = cookies.jwt;
+        const refreshToken = cookies.refreshToken;
         const foundToken = await User.findOne({ refreshToken: refreshToken }).exec();
 
         // Detected refresh token reuse!
         if (!foundToken) {
           // clear out ALL previous refresh tokens
-          newRefreshTokenArray = [];
+          refreshTokenArray = [];
         }
 
         // Note: Review its implication when refresh the browser
@@ -86,7 +86,7 @@ const handleLogin = async (request, response) => {
       response.status(401).send({ message: 'Not Allowed' });
     }
   } catch (error) {
-    console.log(error.message)
+    console.error(error.message)
     response.status(500).send({ error: error.message })
   }
 }

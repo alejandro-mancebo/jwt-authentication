@@ -5,9 +5,9 @@ const handleLogout = async (request, response) => {
   // On client, also delete the accessToken
 
   const cookies = request.cookies;
-  if (!cookies?.jwt) return response.sendStatus(204); // No content
+  if (!cookies?.refreshToken) return response.sendStatus(204); // No content
 
-  const refreshToken = cookies.jwt;
+  const refreshToken = cookies.refreshToken;
 
   // Find the user has refresh token
   const foundUser = await User.findOne({ refreshToken }).exec();
@@ -23,7 +23,8 @@ const handleLogout = async (request, response) => {
   foundUser.refreshToken = [];
   await foundUser.save();
 
-  response.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+  response.clearCookie('accessToken', { httpOnly: true, sameSite: 'None', secure: true });
+  response.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
   response.sendStatus(204);
 }
 

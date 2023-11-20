@@ -6,6 +6,7 @@ import SignUpPage from './pages/signup-page';
 import LoginPage from './pages/login-page';
 import UserProfilePage from './pages/user-profile-page';
 import Users from './pages/users-page';
+import UpdatePage from './pages/update-page';
 import Page404 from './pages/page-404'
 import { PersistLogin } from './components/persist-login';
 
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
         <Route element={<RequireAuth />}>
           <Route path="/user-profile" element={<UserProfilePage />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/update" element={<UpdatePage />} />
         </Route>
       </Route> 
 
